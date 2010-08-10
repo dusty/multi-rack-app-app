@@ -18,10 +18,14 @@ class MyApp::UserApp < MyApp::Base
     
   end
   
+  ##
+  # /
   get '/' do
     erb :home
   end
   
+  ##
+  # /redirect
   get '/redirect' do
     redirect '/fun'
   end

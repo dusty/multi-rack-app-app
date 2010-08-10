@@ -48,6 +48,8 @@ class MyApp::ApiApp < MyApp::Base
   
   ##
   # Displays the monkeys
+  #
+  # /api/monkeys?token=VENDOR&format=json
   get '/monkeys', :provides => [:xml, :json] do
     monkeys = [
       {:name => "bob", :age => 3},

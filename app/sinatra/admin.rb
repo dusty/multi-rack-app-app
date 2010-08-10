@@ -31,6 +31,8 @@ class MyApp::AdminApp < MyApp::Base
   
   ##
   # /admin/redirect
+  #
+  # Notice that redirecting to /fun actually redirects to /admin/fun
   get '/redirect' do
     redirect '/fun'
   end
@@ -41,6 +43,8 @@ class MyApp::AdminApp < MyApp::Base
     erb :fun
   end
   
+  ##
+  # /admin/session
   get '/session' do
     if current_user
       flash[:notice] = "You are logged in."
