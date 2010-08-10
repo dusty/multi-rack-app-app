@@ -3,7 +3,6 @@ require 'yaml'
 # Configurator
 #
 # Add dot-notation to finding the keys in a hash
-# Requires all keys to be symbols
 class Configurator < Hash
   
   def self.root
