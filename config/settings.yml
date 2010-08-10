@@ -1,0 +1,12 @@
+defaults: &defaults
+  url: http://localhost:3000
+
+test:
+  <<: *defaults
+
+development:
+  <<: *defaults
+              
+production:
+  <<: *defaults
+  url: http://myapp.com
