@@ -39,7 +39,9 @@ Here are some things that you might find interesting.
   
 - lib/helpers.rb
   Check out the different helpers.  Some are stolen like throw_content and
-  content_for.  Some are merb-ish such as the concepts in SinatraApiHelperMethods
+  content_for.  Some are merb-ish such as the concepts in SinatraApiHelperMethods.
+  Notice the redirect method that actually works within sub-apps.
+  eg: redirect '/session' in the AdminApp actually redirects to /admin/session.
   
 - lib/configurator.rb | init.rb
   This is used for a global settings.  Its fun to use.  See the yaml file in
