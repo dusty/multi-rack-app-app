@@ -34,8 +34,8 @@ Here are some things that you might find interesting.
   
 - app/sinatra/admin.rb
   Check out the 'get %r{^\/(\w+)$} do'.  I use that to serve erb files
-  that exist in the static views directory.  Easy way to do things that
-  don't need any dynamic data.
+  that exist in the static views directory.  Easy way to do generate views
+  without creating a route.
   
 - lib/helpers.rb
   Check out the different helpers.  Some are stolen like throw_content and
