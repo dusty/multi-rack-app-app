@@ -5,21 +5,21 @@ module MyApp
       app.helpers SinatraAuthHelperMethods
     end
   end
-  
+
   module SinatraViewHelpers
     def self.registered(app)
       app.helpers SinatraViewHelperMethods
     end
   end
-  
+
   module SinatraApiHelpers
     def self.registered(app)
       app.helpers SinatraApiHelperMethods
     end
   end
-  
+
   module SinatraApiHelperMethods
-    
+
     def api_return_codes
       {
         :ok => 200,
@@ -33,90 +33,76 @@ module MyApp
         :error => 500
       }
     end
-    
+
     def json_params
       JSON.parse(request.body.read)
     end
-    
-    def display(object, code=:ok, args={})
-      case response.content_type
-      when 'application/json'
-        content_type :json
-        output = object.to_json
-      when 'application/xml'
-        content_type :xml
-        output = object.to_xml
-      else
-        output = object.to_yaml
-      end
-      return_code = api_return_codes[code] || 500
-      response['Location'] = args[:location] if args[:location]
-      halt(return_code, output)
-    end
-    
-    def respond(code=:ok, args={})
-      display("", code, args)
-    end
-    
-  end
-  
-  module SinatraAuthHelperMethods
-    
-    ##
-    # Store the requested path.  Storing the relative URL
-    # in case the redirect option is prepended above.
-    def store_location
-      unless request.path_info.match(/^\/session/)
-        return_to = request.path_info
-        unless request.query_string.empty?
-          return_to += "?#{request.query_string}"
+
+    def format
+      @format ||= begin
+        case params[:format]
+        when 'json' then :json
+        when 'xml'  then :xml
+        else :html
         end
-        session[:return_to] = return_to
       end
     end
 
-    ##
-    # Redirect to the stored path or a default
+    def display(object, code=200, location=nil)
+      output = case format
+      when :json
+        content_type :json
+        object.to_json if object.respond_to?(:to_json)
+      when :xml
+        content_type :xml
+        object.to_xml if object..respond_to?(:to_xml)
+      when :html
+        content_type :html
+        erb(object.name.downcase) unless object.blank?
+      end
+      response['Location'] = location if location
+      halt(api_return_codes[code] || code, output)
+    end
+
+    def respond(code=:ok, args={})
+      display("", code, args)
+    end
+
+  end
+
+  module SinatraAuthHelperMethods
+
+    def store_location
+      session[:return_to] = request.fullpath
+    end
+
     def redirect_to_stored(default='/')
       return_to = session[:return_to] || default
       session[:return_to] = nil
       redirect return_to
     end
-    
+
+
     def login_required
-      return true if request.path_info.match(/^\/session|.*ico/) || current_user
-      store_location
-      redirect '/session'
+      unless request.path_info.match(/^\/session|.*ico/) || current_user
+        store_location
+        redirect '/session'
+      end
     end
-    
+
     def current_user
-      @current_user ||= User.new(session[:user]) if session[:user]
+      @current_user ||= Person.new(:name => session[:user]) unless session[:user].blank?
     end
-    
+
   end
-  
-  
+
+
   module SinatraViewHelperMethods
 
-    ##
-    # The current subdomain
     def subdomain
       request.host.split('.')[-3] || nil
     end
-      
-    ##
-    # Automatically detect a URLMapped Rack application and
-    # prepend the correct prefix before sending the redirect
-    def redirect(location, *args)
-      unless request.path == request.path_info
-        path = request.path.split('/')
-        info = request.path_info.split('/')
-        prefix = (path - info).join('/')
-        location = File.join('/', prefix, location)
-      end
-      super(location, *args)
-    end
-    
+
     def partial(page, locals={})
       erb(page, {:layout => false}, locals)
     end
@@ -132,7 +118,7 @@ module MyApp
       end
       output
     end
-    
+
     def options_for_radio(name,options,selected=nil)
       output = ""
       options.each do |option|
@@ -151,18 +137,7 @@ module MyApp
         "<span class='error'>#{error}</span>"
       end
     end
-    
-    def error_messages_for(model)
-      return "" if model.errors.empty?
-      out = '<ul class="errors">'
-      model.errors.each do |error|
-        out += <<-EOD
-<li class="error">#{Misc.humanize(error[0])}: #{error[1].last}</li>
-        EOD
-      end
-      out += '</ul>'
-    end
-      
+
     def throw_content(location, &block)
       @_content_blocks ||= {}
       @_content_blocks[location] ||= erb_with_output_buffer { block.call }
@@ -182,5 +157,5 @@ module MyApp
     end
 
   end
-  
+
 end

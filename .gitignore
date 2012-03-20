@@ -1,2 +1,6 @@
 .DS_Store
+.bundle
+log/*
 tmp/*
+vendor/*
+!vendor/cache

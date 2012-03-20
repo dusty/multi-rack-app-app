@@ -1,39 +1,27 @@
 class MyApp::UserApp < MyApp::Base
-  
+
   register MyApp::SinatraViewHelpers
   register MyApp::SinatraAuthHelpers
+
+  use Rack::Session::Cookie, :secret => 'I am a secret'
   use Rack::Flash, :sweep => true
-  
+
   configure do
-    set :views, "app/views/user"
+    set :views, "views/user"
   end
 
   before do
     login_required
   end
-  
-  ##
+
   # Add helpers only needed in user app here
   helpers do
-    
   end
-  
-  ##
-  # /
+
   get '/' do
     erb :home
   end
-  
-  ##
-  # /redirect
-  get '/redirect' do
-    redirect '/fun'
-  end
-  
-  get '/fun' do
-    erb :fun
-  end
-  
+
   get '/session' do
     if current_user
       flash[:notice] = "You are logged in."
@@ -45,7 +33,7 @@ class MyApp::UserApp < MyApp::Base
 
   post '/session' do
     begin
-      User.authenticate(params[:password])
+      Person.authenticate(params[:login])
       session[:user] = params[:login]
       flash[:notice] = "Login to the User Section was successful"
       redirect_to_stored
@@ -60,5 +48,5 @@ class MyApp::UserApp < MyApp::Base
     flash[:notice] = "You have been logged out of the User Section"
     redirect '/session'
   end
-  
+
 end

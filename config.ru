@@ -1,4 +1,4 @@
-require 'init'
+require './init'
 
 run Rack::URLMap.new(
   '/'      => MyApp::UserApp.new,

@@ -1,15 +1,16 @@
-# Isolate
-require 'config/gems'
+# Bundler
+require "rubygems"
+require "bundler/setup"
 
 # Include required gems
-%w{ sinatra/base rack-flash active_support }.each {|req| require req }
+%w{ sinatra/base rack-flash active_model }.each {|req| require req }
 
 # Require custom libraries
-Dir["lib/*.rb"].sort.each {|req| require req}
+Dir["lib/*.rb"].sort.each {|req| require_relative req}
 
-# Global settings for app
-Settings = Configurator.load
+## Global Settings
+Settings = Configurator.load('config/settings.yml')
 
 # Require app code
-Dir["app/models/**/*.rb"].sort.each {|req| require req}
-Dir["app/sinatra/*.rb"].sort.each {|req| require req}
+Dir["models/**/*.rb"].sort.each {|req| require_relative req}
+Dir["app/*.rb"].sort.each {|req| require_relative req}
