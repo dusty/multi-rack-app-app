@@ -24,7 +24,7 @@ class MyApp::UserApp < MyApp::Base
 
   get '/session' do
     if current_user
-      flash[:notice] = "You are logged in."
+      flash[:notice] = "You are logged in"
       redirect '/'
     else
       erb :login
@@ -35,17 +35,17 @@ class MyApp::UserApp < MyApp::Base
     begin
       Person.authenticate(params[:login])
       session[:user] = params[:login]
-      flash[:notice] = "Login to the User Section was successful"
+      flash[:notice] = "Login was successful"
       redirect_to_stored
     rescue StandardError => e
-      flash.now[:warning] = "Login Failed.  #{e.message}"
+      flash.now[:warning] = "Login failed: #{e.message}"
       erb :login
     end
   end
 
   get '/logout' do
     session[:user] = nil
-    flash[:notice] = "You have been logged out of the User Section"
+    flash[:notice] = "You have been logged out"
     redirect '/session'
   end
 

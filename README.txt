@@ -1,4 +1,4 @@
-Quick app to demonstrate using different RACK APPS within an App.
+Quick App to demonstrate using different Apps within a Sinatra App.
 
 SETUP
  $ gem install bundler
