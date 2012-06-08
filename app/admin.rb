@@ -3,6 +3,8 @@ class MyApp::AdminApp < MyApp::Base
   register MyApp::SinatraViewHelpers
   register MyApp::SinatraAuthHelpers
 
+  helpers Sinatra::ContentFor
+
   use Rack::Session::Cookie, :secret => 'I am a secret'
   use Rack::Flash, :sweep => true
 
@@ -28,6 +30,10 @@ class MyApp::AdminApp < MyApp::Base
   # /admin
   get '/?' do
     erb :home
+  end
+
+  get '/json' do
+    erb :json
   end
 
   ##

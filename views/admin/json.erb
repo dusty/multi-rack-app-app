@@ -1,0 +1,24 @@
+<% content_for :head do %>
+<script type='text/javascript'>
+  $(document).ready(function() {
+    jQuery.ajax({
+      url: '/api/monkeys',
+      data: { token: 'VENDOR', format: 'json' },
+      dataType: "json",
+      success: function(data) {
+        $.each(data, function(i, monkey) {
+          $("#api").append('<li>' + monkey.name + ' is ' + monkey.age + '</li>');
+        });
+      }
+    });
+  });
+</script>
+<% end %>
+
+<h3>Welcome <%= current_user.name %> to <%= Settings.url %></h3>
+
+<h4>You are on the ADMIN JSON Page</h4>
+
+<h4>Monkeys</h4>
+<div id="api"></div>
+

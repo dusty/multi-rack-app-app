@@ -7,6 +7,8 @@
         type="text/css">
   <link href="/admin.css" media="screen" rel="stylesheet"
         type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <%= yield_content :head %>
 </head>
 <body>
   <div id="header">
@@ -20,8 +22,9 @@
     <% end %>
   </div>
   <div id="body">
-    <%= yield %>
     <%= partial :_menu %>
+    <hr />
+    <%= yield %>
   </div>
   <div id="footer">
     <p>admin</p>

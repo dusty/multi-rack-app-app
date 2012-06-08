@@ -138,24 +138,6 @@ module MyApp
       end
     end
 
-    def throw_content(location, &block)
-      @_content_blocks ||= {}
-      @_content_blocks[location] ||= erb_with_output_buffer { block.call }
-    end
-
-    def content_for(location)
-      @_content_blocks ||= {}
-      @_content_blocks[location]
-    end
-
-    def erb_with_output_buffer(buf='')
-      @_out_buf, old_buffer = buf, @_out_buf
-      yield
-      @_out_buf
-    ensure
-      @_out_buf = old_buffer
-    end
-
   end
 
 end
